@@ -1,5 +1,6 @@
 package com.example.aston5;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
@@ -19,10 +20,17 @@ public class MainActivity extends FragmentActivity implements Navigator {
 
     @Override
     public void NavigateToDetailFragment(String fistName, String lastName, String phone) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, DetailFragment.newInstance(fistName, lastName, phone))
-                .addToBackStack(null)
-                .commit();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, DetailFragment.newInstance(fistName, lastName, phone))
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.containerDetail, DetailFragment.newInstance(fistName, lastName, phone))
+                    .commit();
+        }
     }
 }
