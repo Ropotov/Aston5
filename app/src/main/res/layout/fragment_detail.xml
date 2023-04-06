@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/padding_8"
     tools:context=".DetailFragment">
 
 
@@ -12,39 +13,40 @@
         android:id="@+id/firstName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_36"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="26sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:autofillHints="no"
         android:inputType="textPersonName"
+        android:textSize="26sp"
+        app:layout_constraintBottom_toTopOf="@+id/lastName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:ignore="LabelFor" />
 
     <EditText
         android:id="@+id/lastName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_36"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="26sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstName"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
+        android:textSize="26sp"
+        app:layout_constraintBottom_toTopOf="@+id/phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firstName"
         tools:ignore="LabelFor" />
 
     <EditText
         android:id="@+id/phone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_36"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="26sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lastName"
         android:importantForAutofill="no"
         android:inputType="phone"
+        android:textSize="26sp"
+        app:layout_constraintBottom_toTopOf="@+id/save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lastName"
         tools:ignore="LabelFor" />
 
     <com.google.android.material.button.MaterialButton
@@ -53,7 +55,7 @@
         android:layout_height="wrap_content"
         android:text="@string/save"
         android:textAllCaps="false"
-        android:layout_marginTop="@dimen/margin_36"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phone" />

@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 public class ListFragment extends Fragment {
 
-    Repository repository = Repository.getInstance();
     FragmentListBinding binding;
+    Repository repository = Repository.getInstance();
     ArrayList<ListItem> list = repository.getList();
     ListItem listItem;
 
@@ -77,6 +77,7 @@ public class ListFragment extends Fragment {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     void setContent() {
         binding.contact1.name.setText(list.get(0).mFirstName + " " + list.get(0).mLastName);
         binding.contact1.phone.setText(list.get(0).mPhone);
