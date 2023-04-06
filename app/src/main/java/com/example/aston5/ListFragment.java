@@ -16,25 +16,19 @@ import com.example.aston5.databinding.FragmentListBinding;
 import java.util.ArrayList;
 
 public class ListFragment extends Fragment {
-    FragmentListBinding binding;
-    ArrayList<ListItem> list = new ArrayList<ListItem>() {{
-        add(new ListItem(1, "Nikita", "Ropotov", "78889995552"));
-        add(new ListItem(2, "Boris", "Britva", "76325695450"));
-        add(new ListItem(3, "Grigory", "Malkov", "79632584455"));
-    }};
-    ListItem listItem;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    Repository repository = Repository.getInstance();
+    FragmentListBinding binding;
+    ArrayList<ListItem> list = repository.getList();
+    ListItem listItem;
 
     public static ListFragment newInstance() {
         return new ListFragment();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentListBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -44,15 +38,15 @@ public class ListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         getParentFragmentManager().setFragmentResultListener("listItem", getViewLifecycleOwner(), new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 listItem = (ListItem) result.getParcelable("listItem");
-                for (ListItem item : list){
-                    if (item.mId == listItem.mId){
+                for (ListItem item : list) {
+                    if (item.mId == listItem.mId) {
                         int index = list.indexOf(item);
                         list.set(index, listItem);
+                        repository.setList(list);
                         setContent();
                     }
                 }
@@ -81,21 +75,6 @@ public class ListFragment extends Fragment {
                 navigator.NavigateToDetailFragment(list.get(2));
             }
         });
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-       if (savedInstanceState != null){
-          list = savedInstanceState.getParcelableArrayList("list");
-       }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("list", list);
     }
 
     void setContent() {
