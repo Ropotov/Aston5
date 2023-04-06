@@ -14,14 +14,12 @@ import com.example.aston5.databinding.FragmentDetailBinding;
 public class DetailFragment extends Fragment {
 
     FragmentDetailBinding binding;
-    String firstName, lastname, phone;
+    ListItem listItem;
 
-    static DetailFragment newInstance(String firstName, String lastName, String phone) {
+    static DetailFragment newInstance(ListItem listItem) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
-        args.putString("firstName", firstName);
-        args.putString("lastName", lastName);
-        args.putString("phone", phone);
+        args.putParcelable("listItem", listItem);
         fragment.setArguments(args);
         return fragment;
     }
@@ -30,9 +28,7 @@ public class DetailFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         assert getArguments() != null;
-        firstName = getArguments().getString("firstName");
-        lastname = getArguments().getString("lastName");
-        phone = getArguments().getString("phone");
+        listItem = (ListItem) getArguments().getParcelable("listItem");
     }
 
     @Override
@@ -46,8 +42,29 @@ public class DetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.firstName.setText(firstName);
-        binding.lastName.setText(lastname);
-        binding.phone.setText(phone);
+        binding.firstName.setText(listItem.mFirstName);
+        binding.lastName.setText(listItem.mLastName);
+        binding.phone.setText(listItem.mPhone);
+
+        binding.save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ListItem newListItem = new ListItem(
+                        listItem.mId,
+                        binding.firstName.getText().toString(),
+                        binding.lastName.getText().toString(),
+                        binding.phone.getText().toString());
+                Bundle newItem = new Bundle();
+                newItem.putParcelable("listItem", newListItem);
+                getParentFragmentManager().setFragmentResult("listItem", newItem);
+                getParentFragmentManager().popBackStack();
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .remove(DetailFragment.this)
+                        .commit();
+
+            }
+        });
     }
 }
+

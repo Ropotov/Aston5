@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
 
+import java.util.ArrayList;
+
 public class MainActivity extends FragmentActivity implements Navigator {
 
     @Override
@@ -19,17 +21,17 @@ public class MainActivity extends FragmentActivity implements Navigator {
     }
 
     @Override
-    public void NavigateToDetailFragment(String fistName, String lastName, String phone) {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+    public void NavigateToDetailFragment(ListItem listItem) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.container, DetailFragment.newInstance(fistName, lastName, phone))
+                    .replace(R.id.container, DetailFragment.newInstance(listItem))
                     .addToBackStack(null)
                     .commit();
         } else {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.containerDetail, DetailFragment.newInstance(fistName, lastName, phone))
+                    .replace(R.id.containerDetail, DetailFragment.newInstance(listItem))
                     .commit();
         }
     }

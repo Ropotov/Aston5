@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import com.example.aston5.databinding.FragmentListBinding;
 
@@ -16,6 +17,17 @@ import java.util.ArrayList;
 
 public class ListFragment extends Fragment {
     FragmentListBinding binding;
+    ArrayList<ListItem> list = new ArrayList<ListItem>() {{
+        add(new ListItem(1, "Nikita", "Ropotov", "78889995552"));
+        add(new ListItem(2, "Boris", "Britva", "76325695450"));
+        add(new ListItem(3, "Grigory", "Malkov", "79632584455"));
+    }};
+    ListItem listItem;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public static ListFragment newInstance() {
         return new ListFragment();
@@ -33,49 +45,70 @@ public class ListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ArrayList<ListItem> list = new ArrayList<ListItem>();
-        list.add(new ListItem("Nikita", "Ropotov", "78889995552"));
-        list.add(new ListItem("Boris", "Britva", "76325695450"));
-        list.add(new ListItem("Grigory", "Malkov", "79632584455"));
+        getParentFragmentManager().setFragmentResultListener("listItem", getViewLifecycleOwner(), new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                listItem = (ListItem) result.getParcelable("listItem");
+                for (ListItem item : list){
+                    if (item.mId == listItem.mId){
+                        int index = list.indexOf(item);
+                        list.set(index, listItem);
+                        setContent();
+                    }
+                }
+            }
+        });
 
         Navigator navigator = (Navigator) getActivity();
 
-        binding.contact1.name.setText(list.get(0).mFirstName + " " + list.get(0).mLastName);
-        binding.contact1.phone.setText(list.get(0).mPhone);
-
-        binding.contact2.name.setText(list.get(1).mFirstName + " " + list.get(1).mLastName);
-        binding.contact2.phone.setText(list.get(1).mPhone);
-
-        binding.contact3.name.setText(list.get(2).mFirstName + " " + list.get(2).mLastName);
-        binding.contact3.phone.setText(list.get(2).mPhone);
+        setContent();
 
         binding.contact1.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navigator.NavigateToDetailFragment(list.get(0).mFirstName,
-                        list.get(0).mLastName,
-                        list.get(0).mPhone);
+                navigator.NavigateToDetailFragment(list.get(0));
             }
         });
         binding.contact2.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navigator.NavigateToDetailFragment(list.get(1).mFirstName,
-                        list.get(1).mLastName,
-                        list.get(1).mPhone);
+                navigator.NavigateToDetailFragment(list.get(1));
             }
         });
         binding.contact3.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navigator.NavigateToDetailFragment(list.get(2).mFirstName,
-                        list.get(2).mLastName,
-                        list.get(2).mPhone);
+                navigator.NavigateToDetailFragment(list.get(2));
             }
         });
     }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+       if (savedInstanceState != null){
+          list = savedInstanceState.getParcelableArrayList("list");
+       }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("list", list);
+    }
+
+    void setContent() {
+        binding.contact1.name.setText(list.get(0).mFirstName + " " + list.get(0).mLastName);
+        binding.contact1.phone.setText(list.get(0).mPhone);
+        binding.contact2.name.setText(list.get(1).mFirstName + " " + list.get(1).mLastName);
+        binding.contact2.phone.setText(list.get(1).mPhone);
+        binding.contact3.name.setText(list.get(2).mFirstName + " " + list.get(2).mLastName);
+        binding.contact3.phone.setText(list.get(2).mPhone);
+    }
 }
 
+
 interface Navigator {
-    void NavigateToDetailFragment(String fistName, String lastName, String phone);
+    void NavigateToDetailFragment(ListItem listItem);
 }
